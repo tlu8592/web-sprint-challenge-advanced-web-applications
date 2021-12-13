@@ -1,12 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
+
+const initialLoginFormValues = {
+    username: '',
+    password: ''
+}
+
+// const initialLoginFormErrors = {
+//     username: '',
+//     password: ''
+// }
 
 const Login = () => {
+    const [formValues, setFormValues] = useState(initialLoginFormValues);
+    const [error, setError] = useState('');
+
+    const history = useHistory();
+
+    const handleChanges = e => {
+        setFormValues({
+            ...formValues,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        axios.post('http://localhost:5000/api/login', formValues)
+            .then(res => {
+                // console.log("response", res);
+                localStorage.setItem('token', res.data.token);
+                history.push('/view');
+            })
+            .catch(err => {
+                console.log("error", err);
+                setError('wrong username/password combination');
+            });
+    }
     
     return(<ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+            <FormGroup onSubmit={handleSubmit}>
+                <Label>
+                    Username:
+                    <Input
+                        id='username'
+                        type='text' 
+                        onChange={handleChanges}
+                        name="username"
+                        value={formValues.username}
+                    />
+                </Label>
+                <Label>
+                    Password:
+                    <Input
+                        id='password' 
+                        type='password'
+                        onChange={handleChanges}
+                        name="password"
+                        value={formValues.password}
+                    />
+                </Label>
+                <Button id='submit'>Login</Button>
+            </FormGroup>
+            <div>
+                <ErrorMessage id='error'>{error}</ErrorMessage>
+            </div>
         </ModalContainer>
     </ComponentContainer>);
 }
@@ -39,6 +102,7 @@ const Label = styled.label`
     display: block;
     text-align: left;
     font-size: 1.5rem;
+    margin-bottom: 1rem;
 `
 
 const FormGroup = styled.form`
@@ -54,4 +118,11 @@ const Input = styled.input`
 const Button = styled.button`
     padding:1rem;
     width: 100%;
+    font-size: 1.5rem;
+    margin-top: 20px;
+`
+
+const ErrorMessage = styled.p`
+    color: red;
+    font-size: 2rem;
 `
