@@ -8,6 +8,8 @@ import Login from './Login';
 import View from './View';
 import Logout from './Logout';
 import PrivateRoute from './PrivateRoute';
+import Article from './Article';
+import EditForm from './EditForm';
 
 const App = () => {
   return (
@@ -16,16 +18,10 @@ const App = () => {
       <Header/>
       <RouteContainer>
         <Switch>
-          {/* 
-          <Route path='/logout'>
-            <Logout />
-          </Route>
-          <Route path='/view'>
-            <View />
-          </Route> 
-          */}
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/view' component={View} />
+          <PrivateRoute path='/articles/:id' component={Article} />
+          <PrivateRoute path='/articles/:id' component={EditForm} />
           <Route path='/login'>
             <Login />
           </Route>

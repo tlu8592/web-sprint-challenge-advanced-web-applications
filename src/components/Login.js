@@ -8,11 +8,6 @@ const initialLoginFormValues = {
     password: ''
 }
 
-// const initialLoginFormErrors = {
-//     username: '',
-//     password: ''
-// }
-
 const Login = () => {
     const [formValues, setFormValues] = useState(initialLoginFormValues);
     const [error, setError] = useState('');
@@ -30,7 +25,6 @@ const Login = () => {
         e.preventDefault();
         axios.post('http://localhost:5000/api/login', formValues)
             .then(res => {
-                // console.log("response", res);
                 localStorage.setItem('token', res.data.token);
                 history.push('/view');
             })
